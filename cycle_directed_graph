@@ -1,0 +1,31 @@
+const int N=5e5+10;
+vector<bool>c1(N,false),c2(N,false);
+map<int,vector<int>>adj;
+
+bool loop_dfs(int x)
+{
+    for(auto it : adj[x])
+    {
+        if(!c1[it])
+        {
+            c1[it]=true;c2[it]=true;
+            if(loop_dfs(it))            return true;
+        }
+        else if(c2[it])            return true;
+    }
+    c2[x]=false;
+    return false;
+}
+
+bool check_loop(int n)
+{
+    for(int i=1;i<=n;i++)
+    {
+        if(!c1[i])
+        {
+            c1[i]=true;c2[i]=true;
+            if(loop_dfs(i))        return true;
+        }
+    }
+    return false;
+}
