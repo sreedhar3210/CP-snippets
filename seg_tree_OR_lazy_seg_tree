@@ -1,0 +1,67 @@
+//segment tree including updates(lazy segment tree)
+//can also be used for maximum and minimum also with just some minor changes
+
+class seg_tree{
+    public:
+        //NOTE : always start v from index 0
+        //low and high are used for indexing , (l,r) is query range.
+
+        vector<ll>v,seg,carry;
+        ll n;
+        seg_tree(ll N){
+            n=N;
+            v=vector<ll>(n,0);
+            seg=vector<ll>(4*(n+1),0);
+            carry=vector<ll>(4*(n+1),0);
+        }
+
+        void build(ll ind,ll low,ll high)
+        {
+            ll m=(low+high)/2;
+            ll a=2*ind+1,b=2*ind+2;
+            if(low==high)   seg[ind]=v[low];
+            else{
+                build(a,low,m);
+                build(b,m+1,high);
+                seg[ind]=seg[a]+seg[b];
+            }    
+        }
+        
+        ll query(ll ind,ll low,ll high,ll l,ll r)
+        {
+            ll m=(low+high)/2;
+            ll a=2*ind+1,b=2*ind+2;
+            seg[ind]+=(carry[ind]*(high-low+1));
+            if(a<=4*n)      carry[a]+=carry[ind];
+            if(b<=4*n)      carry[b]+=carry[ind];
+            carry[ind]=0;
+            if(low>=l && high<=r){
+                return seg[ind];
+            }       
+            else if(low>r || high<l)      return 0;
+            else{
+                ll x,y;
+                x=query(a,low,m,l,r);
+                y=query(b,m+1,high,l,r);
+                return x+y;
+            }
+        }
+
+        //add all elements in the range [l,r] with value x
+        ll update_by_x(ll ind,ll low,ll high,ll l,ll r,ll x){
+            ll m=(low+high)/2;
+            ll a=2*ind+1,b=2*ind+2;
+            ll y=0;
+            if(low>=l && high<=r){
+                y=x*(high-low+1);
+                seg[ind]+=y;
+                if(a<=4*n)      carry[a]+=x;
+                if(b<=4*n)      carry[b]+=x;
+            }
+            else if(low<=r && high>=l){
+                y=update_by_x(a,low,m,l,r,x)+update_by_x(b,m+1,high,l,r,x);
+                seg[ind]+=y;
+            }
+            return y;
+        }
+};
