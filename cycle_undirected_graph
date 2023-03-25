@@ -1,4 +1,6 @@
-const int N=5e5+10;
+//checks if there exists cycle in undirected graph
+
+onst int N=5e5+10;
 map<int,vector<int>>adj;
 vector<bool>c(N,false);
 
