@@ -1,0 +1,19 @@
+//finding all the prime numbes from 1 to N in o(NlogN) time complexity.
+
+const int N=5e6+10;
+vector<int>primes;
+vector<bool>is_prime(N+1,false),comp(N+1,false);
+
+void prime_numbers()
+{    
+    int i,j;
+    for(i=2;i<=N;i++)
+    {
+        if(!comp[i])
+        {
+            is_prime[i]=true;
+            primes.push_back(i);
+            for(j=(2*i);j<=N;j+=i)      comp[j]=true;
+        }
+    }
+}
