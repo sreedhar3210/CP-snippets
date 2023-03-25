@@ -1,0 +1,26 @@
+const int N=5e5+10;
+int parent[N];
+int s[N];
+
+void make(int x)
+{
+    parent[x]=x;s[x]=1;
+}
+
+int get(int x)
+{
+    if(parent[x]==x)    return x;
+    else    return parent[x]=get(parent[x]);
+}
+
+void join(int x,int y)
+{
+    x=get(x);y=get(y);
+    if(s[x]>=s[y] && x!=y)
+    {
+        parent[y]=x;s[x]+=s[y];
+    }
+    else if(x!=y){
+        parent[x]=y;s[y]+=s[x];
+    }
+}
