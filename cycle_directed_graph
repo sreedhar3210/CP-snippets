@@ -1,4 +1,5 @@
 //checks if there exists cycle in directed graph
+
 const int N=5e5+10;
 vector<bool>c1(N,false),c2(N,false);
 map<int,vector<int>>adj;
