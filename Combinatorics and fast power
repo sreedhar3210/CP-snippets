@@ -1,0 +1,35 @@
+const int MAX=5e5+10;
+const ll MOD=998244353;
+
+vector<ll> fact(MAX + 1, 0), inv_fact(MAX + 1, 0);
+
+ll fast_pow(ll b, ll p) {
+    if(p == 0) return 1;
+    if(p == 1) return (b%MOD);
+
+    ll r = fast_pow(b, p / 2);
+
+    if(p % 2) return ((((r*r)%MOD)*(b%MOD)) % MOD);
+    else return ((r*r) % MOD);
+}
+
+void factorials() {
+    fact[0] = 1;
+
+    for(ll i = 1;i <= MAX;i++)
+        fact[i] = (fact[i - 1] * i) % MOD;
+
+    inv_fact[MAX] = fast_pow(fact[MAX], MOD - 2);
+
+    for(ll i = MAX - 1;i >= 0;i--)
+        inv_fact[i] =  (inv_fact[i + 1] * (i + 1)) % MOD;
+}
+
+ll ncr(int n, int k) {
+    return (fact[n] * ((inv_fact[k] * inv_fact[n - k]) % MOD)) % MOD;
+}
+
+ll npr(int n,int k)
+{
+    return ((fact[n]*inv_fact[n-k])%MOD);
+}
