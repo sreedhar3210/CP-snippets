@@ -1,49 +1,49 @@
-class ancestor_problems{
+class ancestors{
     public:
-        int N,l,root,i,j;
-        vector<vector<int>>ancestors;
+        int N,l,i,j;
+        vector<vector<int>>up;
         map<int,vector<int>>adj;
         vector<int>deapth;
         vector<bool>vis;
-
+ 
         //initialization
-        ancestor_problems(int n,int tree_root){
-            N=n+10;root=tree_root;
+        ancestors(int n){
+            N=n+10;
             l=log2(N);
-            ancestors=vector<vector<int>>(N,vector<int>(l+1,0));
+            up=vector<vector<int>>(N,vector<int>(l+1,0));
             vis=vector<bool>(N,false);
             deapth=vector<int>(N,0);
         }
-
+ 
         //running dfs to assign initial parents and deapths
         void dfs(int x,int d){
             deapth[x]=d;
             for(auto it : adj[x]){
                 if(!vis[it]){
                     vis[it]=true;
-                    ancestors[it][0]=x;
+                    up[it][0]=x;
                     dfs(it,d+1);
                 }
             }
         }
-
+ 
         //assigning kth parents where k is power of 2 ( similar to that of sparse table)
         void make(){
             for(j=1;j<=l;j++){
-                for(i=0;i<N;i++)        ancestors[i][j]=ancestors[ancestors[i][j-1]][j-1];
+                for(i=0;i<N;i++)        up[i][j]=up[up[i][j-1]][j-1];
             }
         }
-
+ 
         //to find kth ancestor of a particular node
         int kth_ancestor(int x,int k){
             j=0;
             while(k>0){
-                if(k&1)     x=ancestors[x][j];
+                if(k&1)     x=up[x][j];
                 j++;k=k>>1;
             }
             return x;
         }
-
+ 
         //to find lowest common ancestor of two nodes
         int lca(int x,int y){
             int k,ans;
@@ -59,9 +59,9 @@ class ancestor_problems{
             else{
                 j=l;
                 while(j>=0){
-                    if(ancestors[x][j]==ancestors[y][j])        ans=ancestors[x][j];
+                    if(up[x][j]==up[y][j])        ans=up[x][j];
                     else{
-                        x=ancestors[x][j];y=ancestors[y][j];
+                        x=up[x][j];y=up[y][j];
                     }
                     j--;
                 }
