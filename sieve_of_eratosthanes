@@ -1,0 +1,36 @@
+//Includes all usefull applications of sieve of eratsthones
+class sieve_of_eratos{
+    public:
+        int n;
+        vector<int>primes,divisors;
+        vector<bool>is_prime,is_comp;
+
+        sieve_of_eratos(int n){
+            this->n=n;
+            is_prime.resize(n+1,false);
+            is_comp.resize(n+1,false);
+            divisors.resize(n+1,0);
+        }
+
+        //finds all primes numbers less than equal to n.
+        //time complexity o(nlogn)
+        void prime_numbers(){
+            int i,j;
+            for(i=2;i<=n;i++){
+                if(!is_comp[i]){
+                    is_prime[i]=true;
+                    primes.push_back(i);
+                    for(j=2*i;j<=n;j+=i)     is_comp[j]=true;
+                }
+            }
+        }
+
+        // finds the number of divisors/factors for all numbers less than equal to n.
+        // time complexity : o(nlogn)
+        void count_divisors(){
+            int i,j;
+            for(i=1;i<=n;i++){
+                for(j=i;j<=n;j+=i)      divisors[j]++;
+            }
+        }
+};
