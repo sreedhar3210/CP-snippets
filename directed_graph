@@ -1,33 +1,56 @@
-//checks if there exists cycle in directed graph
-
-const int N=5e5+10;
-vector<bool>c1(N,false),c2(N,false);
-map<int,vector<int>>adj;
-
-bool loop_dfs(int x)
-{
-    for(auto it : adj[x])
-    {
-        if(!c1[it])
-        {
-            c1[it]=true;c2[it]=true;
-            if(loop_dfs(it))            return true;
+//detects cycle and finds topological sort of a directed graph
+class directed_graph{
+    public:
+        int n;
+        vector<bool>vis1,vis2,vis;
+        vector<vector<int>>adj,prev_adj;
+        vector<int>topo_sort;
+ 
+        directed_graph(int n){
+            this->n=n;
+            vis=vis1=vis2=vector<bool>(n+1,false);
+            adj=prev_adj=vector<vector<int>>(n+1);
         }
-        else if(c2[it])            return true;
-    }
-    c2[x]=false;
-    return false;
-}
-
-bool check_loop(int n)
-{
-    for(int i=1;i<=n;i++)
-    {
-        if(!c1[i])
-        {
-            c1[i]=true;c2[i]=true;
-            if(loop_dfs(i))        return true;
+ 
+        bool loop_dfs(int u){
+            for(auto v : adj[u]){
+                if(!vis1[v]){
+                    vis1[v]=true;vis2[v]=true;
+                    if(loop_dfs(v))     return true;
+                }
+                else if(vis2[v])        return true;
+            }
+            vis2[u]=false;
+            return false;
         }
-    }
-    return false;
-}
+        //call this function to check if there exists cycle in the given directed graph.
+        bool check_cycle(){
+            for(int i=1;i<=n;i++){
+                if(!vis1[i]){
+                    vis1[i]=true;vis2[i]=true;
+                    if(loop_dfs(i))         return true;
+                }
+            }
+            return false;
+        }
+ 
+        void dfs(int v){
+            for(auto u : prev_adj[v]){
+                if(!vis[u]){
+                    vis[u]=true;dfs(u);
+                }
+            }
+            topo_sort.push_back(v);
+        }
+        //call this function to find the topological sort of given directed graph
+        //if the given directed graph contains cycles then the topo_sort vector will be empty.
+        void find_topo_sort(){
+            if(!check_cycle()){
+                for(int i=1;i<=n;i++){
+                    if(!vis[i]){
+                        vis[i]=true;dfs(i);
+                    }
+                }
+            }
+        }
+};
