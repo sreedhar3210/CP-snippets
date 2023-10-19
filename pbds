@@ -14,6 +14,7 @@ typedef tree<ll,null_type,less_equal<ll>,rb_tree_tag,tree_order_statistics_node_
     less_equal considers repetetion of elements and less functions exactly same as set
     in the case of less equal upperbound works same as lowerbound 
     order of key and find_order_by_key works as expected in all cases.
+    elements cannot be erased from the ordered set if less_equal is used, so use less in that case.
 */
 
 void solve()
