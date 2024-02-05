@@ -1,7 +1,13 @@
 class factorial_ops{
     public:
         //inv_fact[i] = 1 / fact[i]
-        vector<ll> fact(N + 1, 0), inv_fact(N + 1, 0);
+        
+        vector<ll> fact, inv_fact;
+
+        factorial_ops(){
+            fact.resize(N+1,0);
+            inv_fact.resize(N+1,0);
+        }
 
         void factorials() {
             fact[0] = 1;
