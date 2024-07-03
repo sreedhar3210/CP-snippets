@@ -1,5 +1,6 @@
 //segment tree including updates(lazy segment tree)
 //can also be used for maximum and minimum also with just some minor changes
+//also has the code for binary lifting which reduces time complexity of binary search and segment tree query (o(logn^2)) to o(logn)
 
 class seg_tree{
     public:
@@ -63,5 +64,23 @@ class seg_tree{
                 seg[ind]+=y;
             }
             return y;
+        }
+
+        //this method returns the last index greater than start, and has the maximum element till that last element is <= cur_max
+        int last_ind_with_cur_max(int ind, int low, int high, int start, int cur_max){
+            int m=(low+high)/2;
+            int a=(2*ind)+1,b=(2*ind)+2;
+            if(high<start)                  return start;
+            else if(low>=start){
+                if(seg[ind]<=cur_max)       return high;
+                else if(low==high)          return start;
+                else if(seg[a]<=cur_max)    return max(m,last_ind_with_cur_max(b,m+1,high,start,cur_max));
+                else                        return last_ind_with_cur_max(a,low,m,start,cur_max);
+            }
+            else{
+                int cur = last_ind_with_cur_max(a,low,m,start,cur_max);
+                if(cur >= m)     cur=max(cur,last_ind_with_cur_max(b,m+1,high,start,cur_max));
+                return cur;
+            }
         }
 };
