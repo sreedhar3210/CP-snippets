@@ -1,10 +1,10 @@
-//detects cycle and finds topological sort of a directed graph
+//This class have the methods to detect cycle, finding topological sort, find strongly connected components of a directed graph.
 class directed_graph{
     public:
         int n;
         vector<bool>vis1,vis2,vis;
-        vector<vector<int>>adj,prev_adj;
-        vector<int>topo_sort;
+        vector<vector<int>>adj,prev_adj,all_scc;
+        vector<int>topo_sort,cur_scc;
  
         directed_graph(int n){
             this->n=n;
@@ -23,7 +23,7 @@ class directed_graph{
             vis2[u]=false;
             return false;
         }
-        //call this function to check if there exists cycle in the given directed graph.
+        //this function to returns true if there exists a cycle in the given directed graph.
         bool check_cycle(){
             for(int i=1;i<=n;i++){
                 if(!vis1[i]){
@@ -34,22 +34,46 @@ class directed_graph{
             return false;
         }
  
-        void dfs(int v){
-            for(auto u : prev_adj[v]){
-                if(!vis[u]){
-                    vis[u]=true;dfs(u);
+        void dfs(int u){
+            for(auto v : adj[u]){
+                if(!vis[v]){
+                    vis[v]=true;dfs(v);
                 }
             }
-            topo_sort.push_back(v);
+            topo_sort.push_back(u);
         }
-        //call this function to find the topological sort of given directed graph
-        //if the given directed graph contains cycles then the topo_sort vector will be empty.
+ 
+        //this function fills the topological sort order of the given directed graph.
+        //note that for a given directed graph there may be many correct topological sort orders possible.
         void find_topo_sort(){
-            if(!check_cycle()){
-                for(int i=1;i<=n;i++){
-                    if(!vis[i]){
-                        vis[i]=true;dfs(i);
-                    }
+            for(int i=1;i<=n;i++){
+                if(!vis[i]){
+                    vis[i]=true;dfs(i);
+                }
+            }
+        }
+ 
+        void scc_dfs(int u){
+            cur_scc.push_back(u);
+            for(auto v: prev_adj[u]){
+                if(!vis[v]){
+                    vis[v]=true;scc_dfs(v);
+                }
+            }
+        }
+ 
+        //this function fills all the strongly connected components in the all_scc 2D array
+        void find_scc(){
+            int j;
+            find_topo_sort();
+            vis=vector<bool>(n+1,false);
+            vector<int>v = topo_sort;
+            while(v.size()>0){
+                j=v.back();v.pop_back();
+                if(!vis[j]){
+                    vis[j]=true;scc_dfs(j);
+                    all_scc.push_back(cur_scc);
+                    cur_scc.clear();
                 }
             }
         }
